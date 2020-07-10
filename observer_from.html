@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+  </head>
+  <body>
+    <script>
+      const Rx = rxjs;
+      var arr = ['Jerry', 'Anna', 2016, 2017, '30 days'];
+      var observable = Rx.from(arr);
+      var source = Rx.from('鐵人賽');
+      // 用我們定義好的觀察者，來訂閱這個 observable
+      observable.subscribe(
+        (result) => {
+          console.log(result);
+        },
+        (err) => {
+          console.log('Error ', err);
+        },
+        () => {
+          console.log('complete');
+        }
+      );
+      source.subscribe(
+        (result) => {
+          console.log(result);
+        },
+        (err) => {
+          console.log('Error ', err);
+        },
+        () => {
+          console.log('complete');
+        }
+      );
+    </script>
+  </body>
+</html>

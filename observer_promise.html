@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+  </head>
+  <body>
+    <script>
+      const Rx = rxjs;
+      var observable = Rx.from(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve('Hello RxJS!'); // 正常回傳
+          }, 3000);
+        })
+      );
+      var source = Rx.from(
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject('Sorry RxJS!'); // 錯誤回傳
+          }, 3000);
+        })
+      );
+      // 用我們定義好的觀察者，來訂閱這個 observable
+      observable.subscribe(
+        (result) => {
+          console.log(result);
+        },
+        (err) => {
+          console.log('Error ', err);
+        },
+        () => {
+          console.log('complete');
+        }
+      );
+      source.subscribe(
+        (result) => {
+          console.log(result);
+        },
+        (err) => {
+          console.log('Error ', err);
+        },
+        () => {
+          console.log('complete');
+        }
+      );
+    </script>
+  </body>
+</html>
