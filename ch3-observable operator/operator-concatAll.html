@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // Case 1
+      const Rx = rxjs;
+      var click = Rx.fromEvent(document, 'click');
+      var source = click.pipe(Rx.operators.map((e) => Rx.of(1, 2, 3)));
+
+      var example = source.pipe(Rx.operators.concatAll()); // 將所有元素concat起來。
+
+      example.subscribe(
+        (res) => console.log(res),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+
+      // Case 2 : concatAll 會依順序處理 observable。
+      var ob1 = Rx.interval(1000).pipe(Rx.operators.take(5));
+      var ob2 = Rx.interval(500).pipe(Rx.operators.take(2));
+      var ob3 = Rx.interval(2000).pipe(Rx.operators.take(1));
+
+      var source = Rx.of(ob1, ob2, ob3);
+      var example2 = source.pipe(Rx.operators.concatAll());
+      example2.subscribe(
+        (res) => console.log(res),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>

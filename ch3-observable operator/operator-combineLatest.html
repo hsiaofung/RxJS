@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      //Case 1
+      const Rx = rxjs;
+      var source = Rx.interval(500).pipe(Rx.operators.take(3));
+      var newest = Rx.interval(300).pipe(Rx.operators.take(6));
+      var example = source.pipe(
+        Rx.operators.combineLatest(newest, (x, y) => x + y)
+      ); // 只要一方有送出值(最後的值)，就會執行callback並送出新值。
+
+      example.subscribe(
+        (res) => console.log(res),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>

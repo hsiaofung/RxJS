@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        background-color: tomato;
+        position: relative;
+      }
+      #drag {
+        position: absolute;
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        background-color: #fff;
+        cursor: all-scroll;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="drag"></div>
+    <script>
+      const Rx = rxjs;
+      const dragDOM = document.getElementById('drag');
+      const body = document.body;
+
+      const mouseDown = Rx.fromEvent(dragDOM, 'mousedown'); // 對#drag監聽mousedown
+      const mouseUp = Rx.fromEvent(body, 'mouseup'); // 對body監聽mouseup
+      const mouseMove = Rx.fromEvent(body, 'mousemove'); // 對body監聽mousemove
+
+      mouseDown
+        .pipe(
+          // 當mouseDown時，轉成mouseMove事件
+          Rx.operators.map((event) =>mouseMove.pipe(Rx.operators.takeUntil(mouseUp))), // mouseMove要在mouseUp後結束
+          Rx.operators.concatAll(), // 攤平source 成一維。
+          Rx.operators.map((event) => ({ x: event.clientX, y: event.clientY })) // mousemove event 轉成x,y位置
+        )
+        .subscribe((pos) => {
+          dragDOM.style.left = pos.x + 'px';
+          dragDOM.style.top = pos.y + 'px';
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+  </head>
+  <body>
+    <script>
+      class Producer {
+        constructor() {
+          this.listeners = [];
+        }
+        addListener(listener) {
+          if (typeof listener === 'function') {
+            this.listeners.push(listener);
+          } else {
+            throw new Error('listener 必須是 function');
+          }
+        }
+        removeListener(listener) {
+          this.listeners.splice(this.listeners.indexOf(listener), 1);
+        }
+        notify(message) {
+          this.listeners.forEach((listener) => {
+            listener(message);
+          });
+        }
+      }
+
+      var egghead = new Producer(); // egghead 同時具有註冊聽者及移除監聽者兩種方法。
+      const Rx = rxjs;
+      var observable = Rx.fromEventPattern(
+        (handler) => egghead.addListener(handler),
+        (handler) => egghead.removeListener(handler)
+      );
+
+      // 用我們定義好的觀察者，來訂閱這個 observable
+      observable.subscribe(
+        (result) => {
+          console.log(result);
+        },
+        (err) => {
+          console.log('Error ', err);
+        },
+        () => {
+          console.log('complete');
+        }
+      );
+
+      egghead.notify('Hello! Can you hear me?');
+    </script>
+  </body>
+</html>

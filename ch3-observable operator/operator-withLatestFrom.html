@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const Rx = rxjs;
+      var main = Rx.from('hello').pipe(
+        Rx.operators.zip(Rx.interval(500), (x, y) => x)
+      );
+      var some = Rx.from([0, 1, 0, 0, 0, 1]).pipe(
+        Rx.operators.zip(Rx.interval(300), (x, y) => x)
+      );
+
+      var example = main.pipe( 
+        Rx.operators.withLatestFrom(some, (x, y) => { // 在main 送出值時執行callback。
+          return y === 1 ? x.toUpperCase() : x;
+        })
+      );
+
+      example.subscribe(
+        (res) => console.log(res),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>

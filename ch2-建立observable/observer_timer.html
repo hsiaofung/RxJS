@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/rxjs/bundles/rxjs.umd.min.js"></script>
+  </head>
+  <body>
+    <script>
+      const Rx = rxjs;
+      // 第一個參數 : 發出第一個值的等待時間，第二個參數 : 之後發送值的間隔時間
+      var observable = Rx.timer(1000); // 先等1秒，之後送出0同時通知結束。
+
+      // 用我們定義好的觀察者，來訂閱這個 observable
+      observable.subscribe(
+        (result) => {
+          console.log(result);
+        },
+        (err) => {
+          console.log('Error ', err);
+        },
+        () => {
+          console.log('complete');
+        }
+      );
+
+      // 第一個參數 : 發出第一個值的等待時間，第二個參數 : 之後發送值的間隔時間
+      var source = Rx.timer(1000, 5000); // 先等1秒，之後每5秒送出一個值。
+
+      // 用我們定義好的觀察者，來訂閱這個 observable
+      source.subscribe(
+        (result) => {
+          console.log(result);
+        },
+        (err) => {
+          console.log('Error ', err);
+        },
+        () => {
+          console.log('complete');
+        }
+      );
+    </script>
+  </body>
+</html>
