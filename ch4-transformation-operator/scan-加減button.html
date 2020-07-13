@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <button id="addButton">Add</button>
+    <button id="minusButton">minusButton</button>
+    <div id="state"></div>
+    <script>
+      const addButton = document.getElementById('addButton');
+      const minusButton = document.getElementById('minusButton');
+      const state = document.getElementById('state');
+      
+      // 為這兩個按鈕的點擊事件各建立addClick，minusClick兩個observable
+      const addClick = Rx.Observable.fromEvent(addButton, 'click').mapTo(1); // 點擊後送出1
+      const minusClick = Rx.Observable.fromEvent(minusButton, 'click').mapTo(-1); // 點擊後送出-1
+
+      const numberState = Rx.Observable.empty()
+        .startWith(0)
+        .merge(addClick, minusClick)
+        .scan((origin, next) => origin + next, 0);
+
+      numberState.subscribe(
+        (res) => {
+          console.log(res);
+          state.innerHTML = res;
+        },
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>

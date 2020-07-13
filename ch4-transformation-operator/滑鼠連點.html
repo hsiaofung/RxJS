@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <button id="demo">按鈕</button>
+    <script>
+      const button = document.getElementById('demo');
+      const click = Rx.Observable.fromEvent(button, 'click');
+
+      // 500毫秒內連點2下才會成功。
+      var example = click.bufferTime(500).filter((arr) => arr.length >= 2);
+
+      example.subscribe(
+        (res) => console.log('success'),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>

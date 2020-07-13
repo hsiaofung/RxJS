@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <script>
+      var source = Rx.Observable.from('hello').zip(
+        Rx.Observable.interval(600),
+        (x, y) => x
+      );
+      // sacn : 如同array 的reduce
+      // 第一個參數: callback function，第二個參數 : 初始值
+      var example = source.scan((origin, next) => origin + next, ''); // 初始值空字串
+
+      example.subscribe(
+        (res) => console.log(res),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>

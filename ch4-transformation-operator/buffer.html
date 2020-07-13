@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <script>
+      var source = Rx.Observable.interval(300);
+      var source2 = Rx.Observable.interval(1000);
+      // buffer : buffer要傳入一個observable(source2)，它會把原本的observable(source)送出的元素
+      // 緩存在陣列中，等到傳入的observable(source2)送出元素時，就會觸發把緩存的元素送出。
+      var example = source.buffer(source2);
+
+      example.subscribe(
+        (res) => console.log(res),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>
