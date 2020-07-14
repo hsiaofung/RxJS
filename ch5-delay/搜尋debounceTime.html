@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <input id="searchInput" type="text" placeholder="search" />
+    <div id="theRequestValue"></div>
+    <script>
+      const searchInput = document.getElementById('searchInput');
+      const theRequestValue = document.getElementById('theRequestValue');
+
+      Rx.Observable.fromEvent(searchInput, 'input')
+        .debounceTime(300)
+        .map((e) => e.target.value)
+        .subscribe((value) => {
+          theRequestValue.textContent = value;
+          // 在這裡發request
+        });
+    </script>
+  </body>
+</html>

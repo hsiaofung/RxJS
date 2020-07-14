@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <script>
+      var source = Rx.Observable.from(['a', 'b', 'c', 'd', 2])
+        .zip(Rx.Observable.interval(500), (x, y) => x)
+        .map((x) => x.toUpperCase())
+        // 錯誤處理 :
+        // 可以把errorObs裡的每個錯誤變成發API。通常發到公司的Slack，這樣可以知道哪API掛了。
+        .retryWhen((errorObs) => errorObs.map((err) => fetch('...')));
+
+      // var example = source.map((x) => x.toUpperCase()).catch((error) => Rx.Observable.of('h'));
+
+      source.subscribe(
+        (res) => console.log(res),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>

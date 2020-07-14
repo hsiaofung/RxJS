@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <script>
+      var source = Rx.Observable.from([
+        { value: 'a' },
+        { value: 'b' },
+        { value: 'c' },
+        { value: 'a' },
+        { value: 'c' },
+      ]).zip(Rx.Observable.interval(300), (x, y) => x);
+      // 相同值的資料濾掉只留一筆。比對x.value
+      var example = source.distinct((x) => {
+        return x.value;
+      });
+
+      example.subscribe(
+        (res) => console.log(res),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <div id="title"></div>
+    <script>
+      const title = document.getElementById('title');
+      var source = Rx.Observable.from(['a', 'b', 'c', 'd', 2])
+        .zip(Rx.Observable.interval(500), (x, y) => x)
+        .map((x) => x.toUpperCase());
+      // 通常 source 會是建立即時同步的連線，像是 web socket
+
+      var example = source.catch((error, obs) =>
+        // 模仿即時同步斷線時，利用catch返回一個新的observable, 這個observable會先送出錯誤訊息
+        // 並且把原本的observable延遲5秒再做合併。
+        Rx.Observable.empty().startWith('連線發生錯誤： 5秒後重連').concat(obs.delay(5000))
+      );
+
+      example.subscribe({
+        next: (value) => {
+          title.innerText = value;
+        },
+        error: (err) => {
+          console.log('Error: ' + err);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      });
+    </script>
+  </body>
+</html>

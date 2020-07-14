@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <script>
+      var source = Rx.Observable.interval(300).take(5);
+      // debounceTime : 每次收到元素，會把元素cache住並等待一段時間。如果這段時間沒有收到新的元素，則把元素送出
+      // 如果這段時間又收到新的元素，則會重複上述的行為，重新計時。
+      var example = source.debounceTime(1000);
+
+      example.subscribe(
+        (res) => console.log(res),
+        (err) => console.log('error : ' + err),
+        () => console.log('complete')
+      );
+    </script>
+  </body>
+</html>
