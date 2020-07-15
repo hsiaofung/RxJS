@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <script>
+      function getPostData() {
+        return fetch('https://jsonplaceholder.typicode.com/posts/1').then((res) => res.json());
+      }
+      var source = Rx.Observable.fromEvent(document, 'click');
+      // 雖然發送多筆request，但最後真正印出的log只會有一個。這很適合用在只看最後一次request的情境
+      // 比如自動完成
+      var example = source.switchMap((e) => Rx.Observable.from(getPostData()));
+
+      example.subscribe({
+        next: (value) => {
+          console.log(value);
+        },
+        error: (err) => {
+          console.log('Error: ' + err);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      });
+    </script>
+  </body>
+</html>

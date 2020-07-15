@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <script>
+      var click = Rx.Observable.fromEvent(document, 'click');
+      // concatMap : map 加上 concatAll
+      var example = click.concatMap((e) => Rx.Observable.interval(1000).take(3));
+
+      example.subscribe({
+        next: (value) => {
+          console.log(value);
+        },
+        error: (err) => {
+          console.log('Error: ' + err);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      });
+    </script>
+  </body>
+</html>

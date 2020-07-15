@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <script>
+      function getPostData() {
+        return fetch('https://jsonplaceholder.typicode.com/posts/1').then((res) => res.json());
+      }
+
+      var source = Rx.Observable.fromEvent(document, 'click');
+
+      // concatMap : 確保每一個request會等前一個request完成之後才做處理。
+      // 第二個參數是 callback : 此callback function 有4個參數:
+      // e : 外部observable->click
+      // res: 內部observable->response
+      var example = source.concatMap(
+        (e) => Rx.Observable.from(getPostData()),
+        (e, res, eIndex, resIndex) => res.title
+      );
+
+      example.subscribe({
+        next: (value) => {
+          console.log(value);
+        },
+        error: (err) => {
+          console.log('Error: ' + err);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      });
+    </script>
+  </body>
+</html>

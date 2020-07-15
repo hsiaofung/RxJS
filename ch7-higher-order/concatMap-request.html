@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/5.0.1/Rx.js"></script>
+  </head>
+  <body>
+    <script>
+      function getPostData() {
+        return fetch('https://jsonplaceholder.typicode.com/posts/1').then((res) => res.json);
+      }
+
+      var source = Rx.Observable.fromEvent(document, 'click');
+
+      // concatMap : 確保每一個request會等前一個request完成之後才做處理。
+      var example = source.concatMap((e) => getPostData()); // 直接回promise物件
+      //concatMap、mergeMap、concatMap會自動將promise物件直接轉成observable
+      example.subscribe({
+        next: (value) => {
+          console.log(value);
+        },
+        error: (err) => {
+          console.log('Error: ' + err);
+        },
+        complete: () => {
+          console.log('complete');
+        },
+      });
+    </script>
+  </body>
+</html>
